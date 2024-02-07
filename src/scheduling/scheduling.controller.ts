@@ -19,16 +19,16 @@ export class SchedulingController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.schedulingService.findOne(+id);
+    return this.schedulingService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateSchedulingDto: UpdateSchedulingDto) {
-    return this.schedulingService.update(+id, updateSchedulingDto);
+    return this.schedulingService.update(id, updateSchedulingDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.schedulingService.remove(+id);
+    return this.schedulingService.remove(id);
   }
 }

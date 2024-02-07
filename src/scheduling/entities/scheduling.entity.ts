@@ -5,7 +5,7 @@ import {Patient} from '../../patient/entities/patient.entity';
 @Entity()
 export class Scheduling {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
   date: string;

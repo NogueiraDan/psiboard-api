@@ -1,5 +1,4 @@
 import {ProfessionalDto} from '../../professional/dto/create-professional.dto';
-import {SchedulingDto} from '../../scheduling/dto/create-scheduling.dto';
 
 export class PatientDto {
   readonly name: string;
@@ -10,5 +9,4 @@ export class PatientDto {
   readonly zip_code: string;
   readonly info_add: string;
   professional: ProfessionalDto;
-  scheduling: SchedulingDto;
 }

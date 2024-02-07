@@ -1,26 +1,51 @@
 import { Injectable } from '@nestjs/common';
 import { PatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
+import { PatientRepository } from './repository/patient.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { HttpException } from '@nestjs/common/exceptions';
+import { HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class PatientService {
-  create(patientDto: PatientDto) {
-    return 'This action adds a new patient';
+  
+  constructor(
+    @InjectRepository(PatientRepository)
+    private patientRepository: PatientRepository
+  ){}
+
+  async create(patientDto: PatientDto) {
+    const {name, age, phone, email, adress, zip_code, professional} = patientDto;
+
+    if(!name || !age || !phone || !email || !adress || !zip_code || !professional){
+         throw new HttpException(
+           'Todos os campos são requeridos',
+           HttpStatus.BAD_REQUEST,
+         );
+    }
+    
+
+    return await this.patientRepository.save(patientDto);
+
   }
 
-  findAll() {
-    return `This action returns all patient`;
+  async findAll() { 
+    return await this.patientRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} patient`;
+  async findOne(id: string) {
+    const patient = await this.patientRepository.findOne({
+      where: { id: id },
+    });
+    return patient;
   }
 
-  update(id: number, updatePatientDto: UpdatePatientDto) {
-    return `This action updates a #${id} patient`;
+  async update(id: string, updatePatientDto: UpdatePatientDto) {
+    await this.patientRepository.update(id, updatePatientDto);
+    return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} patient`;
+  async remove(id: string) {
+    return await this.patientRepository.delete(id);
   }
 }

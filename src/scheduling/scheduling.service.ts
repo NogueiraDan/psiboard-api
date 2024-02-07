@@ -1,26 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus } from '@nestjs/common';
+import { HttpException } from '@nestjs/common/exceptions';
+
 import { SchedulingDto } from './dto/create-scheduling.dto';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { SchedulingRepository } from './repository/scheduling.repository';
 
 @Injectable()
 export class SchedulingService {
-  create(schedulingDto: SchedulingDto) {
-    return 'This action adds a new scheduling';
+  constructor (
+    @InjectRepository(SchedulingRepository)
+    private schedulingRepository: SchedulingRepository
+  ){}
+
+  async create(schedulingDto: SchedulingDto) {
+    const {date, hour, type, patient, professional} = schedulingDto;
+
+    if(!date || !hour || !patient || !professional){
+       throw new HttpException(
+         'Todos os campos são requeridos',
+         HttpStatus.BAD_REQUEST,
+       );
+    }
+    const scheduling = this.schedulingRepository.create(schedulingDto);
+    return await this.schedulingRepository.save(scheduling);
   }
 
-  findAll() {
-    return `This action returns all scheduling`;
+  async findAll() {
+    return await this.schedulingRepository.find({
+      relations: ['professional', 'patient'],
+    }); 
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} scheduling`;
+  async findOne(id: string) {
+     const scheduling = await this.schedulingRepository.findOne({
+       where: { id: id },
+     });
+     return scheduling;
   }
 
-  update(id: number, updateSchedulingDto: UpdateSchedulingDto) {
-    return `This action updates a #${id} scheduling`;
+  async update(id: string, updateSchedulingDto: UpdateSchedulingDto) {
+    await this.schedulingRepository.update(id, updateSchedulingDto);
+    return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} scheduling`;
+  async remove(id: string) {
+     await this.schedulingRepository.delete(id);
   }
 }
