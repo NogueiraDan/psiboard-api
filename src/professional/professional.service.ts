@@ -48,6 +48,10 @@ export class ProfessionalService {
     return professional;
   }
 
+  async findOneByEmail(email:string) {
+    return this.professionalRepository.findOneBy({ email: email });
+  }
+
   async update(id: string, updateProfessionalDto: UpdateProfessionalDto) {
     await this.professionalRepository.update(id, updateProfessionalDto);
     return this.findOne(id);

@@ -6,6 +6,7 @@ import { ProfessionalModule } from './professional/professional.module';
 import { PatientModule } from './patient/patient.module';
 import { SchedulingModule } from './scheduling/scheduling.module';
 import {config} from './config/ormconfig';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import {config} from './config/ormconfig';
     ProfessionalModule,
     PatientModule,
     SchedulingModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ProfessionalService } from './professional.service';
 import { ProfessionalDto } from './dto/create-professional.dto';
 import { UpdateProfessionalDto } from './dto/update-professional.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('professional')
 export class ProfessionalController {
@@ -13,6 +14,7 @@ export class ProfessionalController {
   }
 
   @Get()
+  @UseGuards(AuthGuard('jwt'))
   findAll() {
     return this.professionalService.findAll();
   }
@@ -23,7 +25,10 @@ export class ProfessionalController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProfessionalDto: UpdateProfessionalDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateProfessionalDto: UpdateProfessionalDto,
+  ) {
     return this.professionalService.update(id, updateProfessionalDto);
   }
 
