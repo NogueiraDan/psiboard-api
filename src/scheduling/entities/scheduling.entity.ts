@@ -13,7 +13,7 @@ export class Scheduling {
   @Column()
   hour: string;
 
-  @Column({ default: 'marcação' })
+  @Column({ default: 'marcacao' })
   type: string;
 
   @ManyToOne(() => Patient, (patient) => patient.scheduling)
