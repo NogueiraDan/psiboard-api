@@ -2,6 +2,7 @@ import { Injectable, HttpStatus } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions';
 
 import { SchedulingDto } from './dto/create-scheduling.dto';
+import { Scheduling } from './entities/scheduling.entity';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SchedulingRepository } from './repository/scheduling.repository';
@@ -86,8 +87,41 @@ export class SchedulingService {
   }
 
   async update(id: string, updateSchedulingDto: UpdateSchedulingDto) {
-    const {type} = updateSchedulingDto;
+    console.log('AGENDAMENTO DTO', updateSchedulingDto);
 
+    const { date, hour, type, patient, professional } = updateSchedulingDto;
+
+    // Verifique se já existe um agendamento para a mesma data e hora
+    const schedulingUnavailable = await this.schedulingRepository.findOne({
+      where: {
+        date: updateSchedulingDto.date,
+        hour: updateSchedulingDto.hour,
+      },
+    });
+    if (schedulingUnavailable) {
+      const response = {
+        message:
+          'Data e Hora indisponível, já existe um agendamento para essa data e hora. Tente novamente!',
+        schedulingUnavailable,
+      };
+      throw new CustomException(response, HttpStatus.BAD_REQUEST);
+    }
+
+    // Verifica se o cliente já possui agendamento na mesma data
+    const patientSchedulingExists = await this.schedulingRepository
+      .createQueryBuilder('scheduling')
+      .leftJoinAndSelect('scheduling.patient', 'patient')
+      .where('scheduling.patient = :patient', { patient })
+      .andWhere('scheduling.date = :date', { date })
+      .getOne();
+
+    if (patientSchedulingExists && type !== 'remarcacao') {
+      const response = {
+        message: 'O cliente já possui agendamento nesta data',
+        patientSchedulingExists,
+      };
+      throw new CustomException(response, HttpStatus.BAD_REQUEST);
+    }
 
     await this.schedulingRepository.update(id, updateSchedulingDto);
     return this.findOne(id);
