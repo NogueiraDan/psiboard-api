@@ -2,7 +2,6 @@ import { Injectable, HttpStatus } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions';
 
 import { SchedulingDto } from './dto/create-scheduling.dto';
-import { Scheduling } from './entities/scheduling.entity';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SchedulingRepository } from './repository/scheduling.repository';
@@ -16,7 +15,7 @@ export class SchedulingService {
   ) {}
 
   async create(schedulingDto: SchedulingDto) {
-    const { date, hour, type, patient, professional } = schedulingDto;
+    const { date, hour, patient, professional } = schedulingDto;
 
     if (!date || !hour || !patient || !professional) {
       throw new HttpException(
@@ -89,7 +88,7 @@ export class SchedulingService {
   async update(id: string, updateSchedulingDto: UpdateSchedulingDto) {
     console.log('AGENDAMENTO DTO', updateSchedulingDto);
 
-    const { date, hour, type, patient, professional } = updateSchedulingDto;
+    const { date, type, patient } = updateSchedulingDto;
 
     // Verifique se já existe um agendamento para a mesma data e hora
     const schedulingUnavailable = await this.schedulingRepository.findOne({
