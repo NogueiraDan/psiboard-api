@@ -129,4 +129,25 @@ export class SchedulingService {
   async remove(id: string) {
     await this.schedulingRepository.delete(id);
   }
+
+  async getProfessionalSchedulingToday(professionalId: any, date: string) {
+    const schedulings = await this.schedulingRepository
+      .createQueryBuilder('scheduling')
+      .leftJoinAndSelect('scheduling.patient', 'patient')
+      .where('scheduling.professionalId = :professionalId', { professionalId })
+      .andWhere('scheduling.date = :date', { date: date })
+      .getMany();
+
+    return schedulings;
+  }
+
+  async getProfessionalScheduling(professionalId: any) {
+    const schedulings = await this.schedulingRepository
+      .createQueryBuilder('scheduling')
+      .leftJoinAndSelect('scheduling.patient', 'patient')
+      .where('scheduling.professionalId = :professionalId', { professionalId })
+      .getMany();
+
+    return schedulings;
+  }
 }

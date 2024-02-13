@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { SchedulingService } from './scheduling.service';
 import { SchedulingDto } from './dto/create-scheduling.dto';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
@@ -22,8 +22,26 @@ export class SchedulingController {
     return this.schedulingService.findOne(id);
   }
 
+  @Get('today/:id')
+  getProfessionalSchedulingToday(
+    @Param('id') id: string,
+    @Query('date') date: string,
+  ) {
+    return this.schedulingService.getProfessionalSchedulingToday(id, date);
+  }
+
+  @Get('professional/:id')
+  getProfessionalScheduling(
+    @Param('id') id: string,
+  ) {
+    return this.schedulingService.getProfessionalScheduling(id);
+  }
+
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSchedulingDto: UpdateSchedulingDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateSchedulingDto: UpdateSchedulingDto,
+  ) {
     return this.schedulingService.update(id, updateSchedulingDto);
   }
 
