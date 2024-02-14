@@ -1,6 +1,5 @@
 import {
   Injectable,
-  NotAcceptableException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -21,7 +20,7 @@ export class AuthService {
     if (!professional) {
       throw new UnauthorizedException('Email ou Senha Inválidos');
     }
-
+    
     const matchPassword = await bcrypt.compare(password, professional.password);
     if (!matchPassword) {
       throw new UnauthorizedException('Senha incorreta!');
