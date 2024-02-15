@@ -39,8 +39,8 @@ export class AuthService {
       access_token: this.jwtService.sign(
         { email: payload.email },
         {
-          secret: 'super-secret-key',
-          expiresIn: '1d',
+          secret: process.env.SECRET_KEY,
+          expiresIn: '1h',
         },
       ),
       name,
