@@ -9,7 +9,7 @@ import { ProfessionalService } from 'src/professional/professional.service';
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private professionalService: ProfessionalService) {
     super({
-      secretOrKey: 'super-secret-key',
+      secretOrKey: process.env.SECRET_KEY,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
     });
