@@ -3,6 +3,7 @@ import { ProfessionalService } from './professional.service';
 import { ProfessionalDto } from './dto/create-professional.dto';
 import { UpdateProfessionalDto } from './dto/update-professional.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { CustomJwtAuthGuard } from 'src/auth/CustomJwtAuthGuard';
 
 @Controller('professional')
 export class ProfessionalController {
@@ -14,7 +15,8 @@ export class ProfessionalController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
+  @UseGuards(CustomJwtAuthGuard)
   findAll() {
     return this.professionalService.findAll();
   }

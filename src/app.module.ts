@@ -8,12 +8,17 @@ import { SchedulingModule } from './scheduling/scheduling.module';
 import {config} from './config/ormconfig';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+    }),
+    JwtModule.register({
+      secret: process.env.SECRET_KEY,
+      signOptions: { expiresIn: '1h' },
     }),
     TypeOrmModule.forRoot(config),
     ProfessionalModule,

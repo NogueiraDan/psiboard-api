@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Professional } from 'src/professional/entities/professional.entity';
 import { ProfessionalService } from 'src/professional/professional.service';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,7 @@ export class AuthService {
     if (!professional) {
       throw new UnauthorizedException('Email ou Senha Inválidos');
     }
-    
+
     const matchPassword = await bcrypt.compare(password, professional.password);
     if (!matchPassword) {
       throw new UnauthorizedException('Senha incorreta!');
@@ -35,17 +36,49 @@ export class AuthService {
     );
     const { name, email, id } = professional;
 
+    const token = this.jwtService.sign(
+      { email: payload.email },
+      {
+        secret: process.env.SECRET_KEY,
+        expiresIn: '1h',
+      },
+    );
+
+    const iv = Buffer.from(process.env.ENCRYPTION_IV, 'hex');
+    const cipher = crypto.createCipheriv(
+      'aes-256-cbc',
+      process.env.ENCRYPTION_KEY,
+      iv,
+    );
+    let encryptedToken = cipher.update(token, 'utf8', 'hex');
+    encryptedToken += cipher.final('hex');
+
     return {
-      access_token: this.jwtService.sign(
-        { email: payload.email },
-        {
-          secret: process.env.SECRET_KEY,
-          expiresIn: '1h',
-        },
-      ),
+      access_token: encryptedToken,
       name,
       email,
       id,
     };
+  }
+
+  async decryptToken(encryptedToken: string): Promise<any> {
+    console.log('Secret Key:', process.env.SECRET_KEY);
+    const iv = Buffer.from(process.env.ENCRYPTION_IV, 'hex');
+    const decipher = crypto.createDecipheriv(
+      'aes-256-cbc',
+      process.env.ENCRYPTION_KEY,
+      iv,
+    );
+    let decryptedToken = decipher.update(encryptedToken, 'hex', 'utf8');
+    decryptedToken += decipher.final('utf8');
+    console.log('Decrypted Token:', decryptedToken); // Log para depuração
+
+    try {
+      const payload = this.jwtService.verify(decryptedToken, { secret: process.env.SECRET_KEY });
+      return payload;
+    } catch (error) {
+      console.error('Error decrypting token:', error); // Log para depuração
+      throw new Error('Invalid token');
+    }
   }
 }
