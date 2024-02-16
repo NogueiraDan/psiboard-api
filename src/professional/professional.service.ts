@@ -52,6 +52,19 @@ export class ProfessionalService {
     return this.professionalRepository.findOneBy({ email: email });
   }
 
+  async findPatientsFromProfessional(id: string) {
+    const professional = await this.professionalRepository.findOne({
+      relations: ['patients'],
+      where: {id: id}
+    });
+
+    if(!professional){
+      throw new Error('Profissional não encontrado');
+    }
+
+    return professional.patients;
+  }
+
   async update(id: string, updateProfessionalDto: UpdateProfessionalDto) {
     await this.professionalRepository.update(id, updateProfessionalDto);
     return this.findOne(id);

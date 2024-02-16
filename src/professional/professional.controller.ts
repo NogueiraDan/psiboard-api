@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { ProfessionalService } from './professional.service';
 import { ProfessionalDto } from './dto/create-professional.dto';
 import { UpdateProfessionalDto } from './dto/update-professional.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { CustomJwtAuthGuard } from 'src/auth/CustomJwtAuthGuard';
 
 @Controller('professional')
@@ -24,6 +23,11 @@ export class ProfessionalController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.professionalService.findOne(id);
+  }
+
+  @Get(':id/patients') 
+  findPatientsFromProfessional(@Param('id') id: string){
+    return this.professionalService.findPatientsFromProfessional(id);
   }
 
   @Patch(':id')
