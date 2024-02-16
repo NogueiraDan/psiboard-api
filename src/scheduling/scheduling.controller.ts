@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { SchedulingService } from './scheduling.service';
 import { SchedulingDto } from './dto/create-scheduling.dto';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
+import { CustomJwtAuthGuard } from 'src/auth/CustomJwtAuthGuard';
 
 @Controller('scheduling')
 export class SchedulingController {
@@ -23,6 +24,7 @@ export class SchedulingController {
   }
 
   @Get('today/:id')
+  @UseGuards(CustomJwtAuthGuard)
   getProfessionalSchedulingToday(
     @Param('id') id: string,
     @Query('date') date: string,
@@ -31,9 +33,7 @@ export class SchedulingController {
   }
 
   @Get('professional/:id')
-  getProfessionalScheduling(
-    @Param('id') id: string,
-  ) {
+  getProfessionalScheduling(@Param('id') id: string) {
     return this.schedulingService.getProfessionalScheduling(id);
   }
 

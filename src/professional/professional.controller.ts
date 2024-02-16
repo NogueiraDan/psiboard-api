@@ -25,8 +25,9 @@ export class ProfessionalController {
     return this.professionalService.findOne(id);
   }
 
-  @Get(':id/patients') 
-  findPatientsFromProfessional(@Param('id') id: string){
+  @Get(':id/patients')
+  @UseGuards(CustomJwtAuthGuard)
+  findPatientsFromProfessional(@Param('id') id: string) {
     return this.professionalService.findPatientsFromProfessional(id);
   }
 
