@@ -97,7 +97,10 @@ export class SchedulingService {
         hour: updateSchedulingDto.hour,
       },
     });
-    if (schedulingUnavailable) {
+    if (schedulingUnavailable && type !== 'remarcacao') {
+       console.log('---------------AgendamentoExistente----------------------');
+       console.log(schedulingUnavailable);
+       console.log('---------------------------------------------------------');
       const response = {
         message:
           'Data e Hora indisponível, já existe um agendamento para essa data e hora. Tente novamente!',
