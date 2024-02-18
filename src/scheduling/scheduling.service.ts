@@ -147,7 +147,56 @@ export class SchedulingService {
       .leftJoinAndSelect('scheduling.patient', 'patient')
       .where('scheduling.professionalId = :professionalId', { professionalId })
       .getMany();
-
     return schedulings;
+  }
+
+  async getAvailableSchedules(date: string) {
+
+    const formatDate = (dateToFormat:any) => {
+      // Verifica se a data tem o formato correto (8 dígitos)
+      if (/^\d{8}$/.test(dateToFormat)) {
+        // Formata a data para "DD/MM/YYYY"
+        return `${dateToFormat.substr(0, 2)}/${dateToFormat.substr(2, 2)}/${dateToFormat.substr(4)}`;
+      } else {
+        // Caso a data não esteja no formato correto, retorne a data original
+        return dateToFormat;
+      }
+    };
+
+    const dateFormated = formatDate(date);
+
+    console.log('----------------------DATAENVIADA---------------------------');
+    console.log(dateFormated);
+    console.log('------------------------------------------------------------');
+
+    const schedulings = await this.schedulingRepository
+      .createQueryBuilder('schedulings')
+      .where('schedulings.date = :date', { date: dateFormated })
+      .getMany();
+
+    console.log('---------------AgendamentosMarcados-------------------------');
+    console.log(schedulings);
+    console.log('------------------------------------------------------------');
+
+    // RETORNO DOS HORARIOS DISPONIVEIS DE HORA EM HORA DENTRO DO INTERVALO
+    const availableSchedules: string[] = [];
+    for (let hour = 7; hour <= 21; hour++) {
+      const formatedHour = hour.toString().padStart(2, '0');
+      const schedule = `${formatedHour}:00`;
+
+      // Verifica se o horário já está agendado
+      const scheduledHour = await this.schedulingRepository.findOne({
+        where: {
+          date: dateFormated,
+          hour: schedule,
+        },
+      });
+
+      // Se o horário não estiver agendado, adicione-o à lista de horários disponíveis
+      if (!scheduledHour) {
+        availableSchedules.push(schedule);
+      }
+    }
+    return availableSchedules;
   }
 }

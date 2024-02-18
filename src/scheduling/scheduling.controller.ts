@@ -18,6 +18,11 @@ export class SchedulingController {
     return this.schedulingService.findAll();
   }
 
+  @Get('available-schedules')
+  getAvailableSchedules(@Query('date') date: any) {
+    return this.schedulingService.getAvailableSchedules(date);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.schedulingService.findOne(id);
