@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from '../app.service';
+import { Professional } from '../professional/entities/professional.entity';
+import { Patient } from '../patient/entities/patient.entity';
+import { Scheduling } from '../scheduling/entities/scheduling.entity';
 
 describe('AppService', () => {
   let appService: AppService;
@@ -10,10 +13,9 @@ describe('AppService', () => {
         TypeOrmModule.forRoot({
           type: 'sqlite',
           database: 'database/database-test.sqlite',
-        //   entities: [YourEntity],
+          entities: [Professional, Patient, Scheduling],
           synchronize: true,
         }),
-        // TypeOrmModule.forFeature([YourEntity]),
       ],
       providers: [AppService],
     }).compile();
@@ -21,11 +23,6 @@ describe('AppService', () => {
     appService = moduleRef.get<AppService>(AppService);
   });
 
-  afterAll(async () => {
-    // Limpeza após os testes, se necessário
-  });
-
-  // Aqui você pode adicionar seus testes CRUD
   it('should be defined', () => {
     expect(appService).toBeDefined();
   });
