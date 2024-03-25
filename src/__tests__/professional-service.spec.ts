@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { HttpException } from '@nestjs/common/exceptions';
 import { ProfessionalService } from '../professional/professional.service';
 import { Professional } from '../professional/entities/professional.entity';
 import { Patient } from '../patient/entities/patient.entity';
@@ -51,5 +52,16 @@ describe('ProfessionalService Unit Test', () => {
       expect(createdRecord).toBeDefined();
       expect(createdRecord.id).toBeDefined();
     }
+  });
+
+  it('should fail by creating a new record with existing email', async () => {
+    const newRecord = {
+      name: 'Daniel',
+      email: 'daniel@teste.com',
+      password: 'password',
+    };
+    await expect(professionalService.create(newRecord)).rejects.toThrow(
+      HttpException,
+    );
   });
 });
