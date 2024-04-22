@@ -8,34 +8,36 @@ import { HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class PatientService {
-  
   constructor(
     @InjectRepository(PatientRepository)
-    private patientRepository: PatientRepository
-  ){}
+    private patientRepository: PatientRepository,
+  ) {}
 
   async create(patientDto: PatientDto) {
-    const {name, age, phone, email, adress, zip_code, professional} = patientDto;
-
-    if(!name || !age || !phone || !email || !adress || !zip_code || !professional){
-         throw new HttpException(
-           'Todos os campos são requeridos',
-           HttpStatus.BAD_REQUEST,
-         );
+    const existingPatient = await this.findOneByEmail(patientDto.email);
+    if (existingPatient) {
+      throw new HttpException(
+        'Este email já possui um cadastro ativo!',
+        HttpStatus.BAD_REQUEST,
+      );
     }
-    
-
     return await this.patientRepository.save(patientDto);
-
   }
 
-  async findAll() { 
+  async findAll() {
     return await this.patientRepository.find();
   }
 
   async findOne(id: string) {
     const patient = await this.patientRepository.findOne({
       where: { id: id },
+    });
+    return patient;
+  }
+
+  async findOneByEmail(email: string) {
+    const patient = await this.patientRepository.findOne({
+      where: { email: email },
     });
     return patient;
   }

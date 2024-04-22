@@ -17,13 +17,6 @@ export class SchedulingService {
   async create(schedulingDto: SchedulingDto) {
     const { date, hour, patient, professional } = schedulingDto;
 
-    if (!date || !hour || !patient || !professional) {
-      throw new HttpException(
-        'Todos os campos são requeridos',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
     // Verifica se a hora está no formato HH:MM
     const hourPattern = /^(0[0-9]|1[0-9]|2[0-1]):[0-5][0-9]$/;
     if (!hourPattern.test(schedulingDto.hour)) {

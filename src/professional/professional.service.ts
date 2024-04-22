@@ -15,16 +15,8 @@ export class ProfessionalService {
   ) {}
 
   async create(professionalDto: ProfessionalDto) {
-    const { name, email, password } = professionalDto;
-    if (!name || !email || !password) {
-       throw new HttpException(
-         'Todos os campos são requeridos',
-         HttpStatus.BAD_REQUEST,
-       );
-    }
-    const existProfessional = await this.professionalRepository.findOne({
-      where: { email: email },
-    });
+    const { email, password } = professionalDto;
+    const existProfessional = await this.findOneByEmail(email);
     if (existProfessional) {
      throw new HttpException(
        'Este email já está sendo utilizado',

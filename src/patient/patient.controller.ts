@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { PatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
@@ -20,6 +20,11 @@ export class PatientController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.patientService.findOne(id);
+  }
+
+  @Get()
+  findOneByEmail(@Query('email') email: string) {
+    return this.patientService.findOneByEmail(email);
   }
 
   @Patch(':id')
