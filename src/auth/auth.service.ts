@@ -62,7 +62,6 @@ export class AuthService {
   }
 
   async decryptToken(encryptedToken: string): Promise<any> {
-    console.log('Secret Key:', process.env.SECRET_KEY);
     const iv = Buffer.from(process.env.ENCRYPTION_IV, 'hex');
     const decipher = crypto.createDecipheriv(
       'aes-256-cbc',
@@ -71,7 +70,6 @@ export class AuthService {
     );
     let decryptedToken = decipher.update(encryptedToken, 'hex', 'utf8');
     decryptedToken += decipher.final('utf8');
-    console.log('Decrypted Token:', decryptedToken); // Log para depuração
 
     try {
       const payload = this.jwtService.verify(decryptedToken, { secret: process.env.SECRET_KEY });
