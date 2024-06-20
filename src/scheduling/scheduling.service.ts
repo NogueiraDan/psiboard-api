@@ -5,7 +5,7 @@ import { SchedulingDto } from './dto/create-scheduling.dto';
 import { UpdateSchedulingDto } from './dto/update-scheduling.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SchedulingRepository } from './repository/scheduling.repository';
-import { CustomException } from 'src/exceptions/custom.exception';
+import { CustomException } from '../exceptions/custom.exception';
 
 @Injectable()
 export class SchedulingService {
