@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppService } from '../app.service';
-import { Professional } from '../professional/entities/professional.entity';
-import { Patient } from '../patient/entities/patient.entity';
-import { Scheduling } from '../scheduling/entities/scheduling.entity';
+import { Professional } from '../modules/professional/entities/professional.entity';
+import { Patient } from '../modules/patient/entities/patient.entity';
+import { Scheduling } from '../modules/scheduling/entities/scheduling.entity';
 
 describe('AppService', () => {
   let appService: AppService;

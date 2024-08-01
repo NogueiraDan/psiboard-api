@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpException } from '@nestjs/common/exceptions';
-import { ProfessionalService } from '../professional/professional.service';
-import { ProfessionalRepository } from '../professional/repository/professional.repository';
+import { ProfessionalService } from '../modules/professional/professional.service';
+import { ProfessionalRepository } from '../modules/professional/repository/professional.repository';
 
 // Mock repository
 const mockProfessionalRepository = {
