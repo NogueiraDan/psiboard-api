@@ -3,8 +3,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Professional } from 'src/professional/entities/professional.entity';
-import { ProfessionalService } from 'src/professional/professional.service';
+import { Professional } from '../modules/professional/entities/professional.entity';
+import { ProfessionalService } from '../modules/professional/professional.service';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 
