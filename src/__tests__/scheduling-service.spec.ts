@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { SchedulingService } from '../scheduling/scheduling.service';
-import { SchedulingRepository } from '../scheduling/repository/scheduling.repository';
-import { SchedulingDto } from '../scheduling/dto/create-scheduling.dto';
-import { UpdateSchedulingDto } from '../scheduling/dto/update-scheduling.dto';
+import { SchedulingService } from '../modules/scheduling/scheduling.service';
+import { SchedulingRepository } from '../modules/scheduling/repository/scheduling.repository';
+import { SchedulingDto } from '../modules/scheduling/dto/create-scheduling.dto';
+import { UpdateSchedulingDto } from '../modules/scheduling/dto/update-scheduling.dto';
 import { CustomException } from '../exceptions/custom.exception';
-import { ProfessionalDto } from 'src/professional/dto/create-professional.dto';
-import { PatientDto } from 'src/patient/dto/create-patient.dto';
+import { ProfessionalDto } from '../modules/professional/dto/create-professional.dto';
+import { PatientDto } from '../modules/patient/dto/create-patient.dto';
 
 const mockSchedulingRepository = {
   createQueryBuilder: jest.fn().mockReturnThis(),
